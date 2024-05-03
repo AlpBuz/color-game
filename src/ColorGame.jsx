@@ -10,17 +10,31 @@ export default function StartGame() {
     const [timer, setTimer] = useState(120);
     const [TimerIsActive, setTimerIsActive] = useState(true);
 
-    const [color, setColor] = useState('');
-    const [word, setWord] = useState('');
+    const [wordColor, setWordColor] = useState('blue');
+    const [word, setWord] = useState('red');
+
+
+    useEffect(() => {
+        let interval;
+
+        if (TimerIsActive && timer > 0) {
+
+            interval = setInterval(() => {
+              setTimer((prevSeconds) => prevSeconds - 1);
+            }, 1000);
+        } else if (!TimerIsActive && timer !== 120) {
+            clearInterval(interval);
+        }
+        return () => clearInterval(interval);
+    }, [TimerIsActive, timer])
     
 
     const updateScore = () => {
-        setScore(score + 10);
+        setScore(score + 100);
     }
 
     const formSubmit = async (event) =>{
         event.preventDefault();
-
 
         try{
 
@@ -44,6 +58,10 @@ export default function StartGame() {
 
             <div className="timer">
                 <p>Time: {timer}</p>
+            </div>
+
+            <div className="The-Color">
+                <p style={{color: wordColor}}>{word}</p>
             </div>
 
             <form name="Submit-Answer" action="" method="post" onSubmit={formSubmit}>
