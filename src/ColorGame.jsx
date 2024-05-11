@@ -5,13 +5,17 @@ import { useState, useEffect } from "react";
 
 
 
+
 export default function StartGame() {
     const [score, setScore] = useState (0);
     const [timer, setTimer] = useState(120);
     const [TimerIsActive, setTimerIsActive] = useState(true);
+    const [userAnswer, setUserAnswer] = useState('')
 
     const [wordColor, setWordColor] = useState('blue');
     const [word, setWord] = useState('red');
+
+    const [incorrectAnswer, setIncorrectAnswer] = useState(false);
 
 
     useEffect(() => {
@@ -33,18 +37,44 @@ export default function StartGame() {
         setScore(score + 100);
     }
 
+    const nextColorAndWord = (data) => {
+        setWord(data['newWord'])
+        setWordColor(data['newColor'])
+    }
+
+    const gameOver = () => {
+
+    }
+
     const formSubmit = async (event) =>{
         event.preventDefault();
+        const payload = new FormData();
+        payload.append("color", wordColor);
+        payload.append("userAnswer", userAnswer)
+        console.log(payload)
+        setUserAnswer('')
 
         try{
 
-            const response = fetch("", {
-
-
+            const response = await fetch("http://localhost:5000/confirmAnswer", {
+                method: "POST",
+                body: payload
             })
 
+            const data = await response.json();
+
+            if(data['valid'] === true){
+                setIncorrectAnswer(false);
+                updateScore();
+                nextColorAndWord(data);
+
+            }else{
+                setIncorrectAnswer(true);
+            }
+            
+
         }catch (error){
-            console.log("error in sending answer: ", error.message)
+            console.error("error in sending answer: ", error.message)
         }
         
     }
@@ -64,9 +94,10 @@ export default function StartGame() {
                 <p style={{color: wordColor}}>{word}</p>
             </div>
 
+            {incorrectAnswer && <p className="error" style={{"color": "red"}}>Answer is Incorrect</p>}
             <form name="Submit-Answer" action="" method="post" onSubmit={formSubmit}>
                 <div>
-                    <input type="textbox" id="User-Answer" required placeholder="Enter Color"/>
+                    <input type="textbox" id="User-Answer" value={userAnswer} onChange={(event) => setUserAnswer(event.target.value)} required placeholder="Enter Color"/>
                 </div>
             </form>
         </div>
