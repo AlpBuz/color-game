@@ -4,7 +4,7 @@ import StartGame from "./ColorGame";
 function App() {
   // State to track if the game has started
   const [gameStarted, setGameStarted] = useState(false);
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(60);
   const [TimerIsActive, setTimerIsActive] = useState(false);
 
   useEffect(() => { //timer of the game
@@ -38,7 +38,7 @@ function App() {
     // Perform any game initialization here
     setGameStarted(false);
     setTimerIsActive(false);
-    setTimer(10);
+    setTimer(60);
   };
 
   return (
