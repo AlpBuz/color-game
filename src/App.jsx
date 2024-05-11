@@ -1,19 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import StartGame from "./ColorGame";
 
 function App() {
   // State to track if the game has started
   const [gameStarted, setGameStarted] = useState(false);
+  const [timer, setTimer] = useState(10);
+  const [TimerIsActive, setTimerIsActive] = useState(false);
+
+  useEffect(() => { //timer of the game
+    let interval;
+
+    if (TimerIsActive && timer > 0) {
+
+        interval = setInterval(() => {
+          setTimer((prevSeconds) => prevSeconds - 1);
+        }, 1000);
+    } else if (!TimerIsActive && timer !== 120) {
+        clearInterval(interval);
+    }
+
+    if (timer === 0){
+      endGame();
+    }
+
+    return () => clearInterval(interval);
+
+}, [TimerIsActive, timer])
 
   // Function to start the game
   const startGame = () => {
     // Perform any game initialization here
     setGameStarted(true);
+    setTimerIsActive(true);
   };
 
   const endGame = () => {
     // Perform any game initialization here
     setGameStarted(false);
+    setTimerIsActive(false);
+    setTimer(10);
   };
 
   return (
@@ -24,6 +49,11 @@ function App() {
         <div className="Main-Menu">
           {gameStarted ? (
             <div>
+
+              <div className="timer">
+                <p>Time: {timer}</p>
+              </div>
+
               <StartGame />
 
               <div className="endGame mt-4">

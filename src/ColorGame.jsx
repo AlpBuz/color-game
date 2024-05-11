@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 
 
@@ -8,8 +8,6 @@ import { useState, useEffect } from "react";
 
 export default function StartGame() {
     const [score, setScore] = useState (0);
-    const [timer, setTimer] = useState(90);
-    const [TimerIsActive, setTimerIsActive] = useState(true);
     const [userAnswer, setUserAnswer] = useState('')
 
     const [wordColor, setWordColor] = useState('blue');
@@ -17,21 +15,6 @@ export default function StartGame() {
 
     const [incorrectAnswer, setIncorrectAnswer] = useState(false);
 
-
-    useEffect(() => {
-        let interval;
-
-        if (TimerIsActive && timer > 0) {
-
-            interval = setInterval(() => {
-              setTimer((prevSeconds) => prevSeconds - 1);
-            }, 1000);
-        } else if (!TimerIsActive && timer !== 120) {
-            clearInterval(interval);
-        }
-        return () => clearInterval(interval);
-    }, [TimerIsActive, timer])
-    
 
     const updateScore = () => {
         setScore(score + 100);
@@ -42,9 +25,6 @@ export default function StartGame() {
         setWordColor(data['newColor'])
     }
 
-    const gameOver = () => {
-
-    }
 
     const formSubmit = async (event) =>{
         event.preventDefault();
@@ -84,10 +64,6 @@ export default function StartGame() {
         <div>
             <div className="score">
                 <p>Score: {score}</p>
-            </div>
-
-            <div className="timer">
-                <p>Time: {timer}</p>
             </div>
 
             <div className="The-Color">
