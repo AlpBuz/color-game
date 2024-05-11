@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 
 export default function StartGame() {
     const [score, setScore] = useState (0);
-    const [timer, setTimer] = useState(120);
+    const [timer, setTimer] = useState(90);
     const [TimerIsActive, setTimerIsActive] = useState(true);
     const [userAnswer, setUserAnswer] = useState('')
 
@@ -97,7 +97,7 @@ export default function StartGame() {
             {incorrectAnswer && <p className="error" style={{"color": "red"}}>Answer is Incorrect</p>}
             <form name="Submit-Answer" action="" method="post" onSubmit={formSubmit}>
                 <div>
-                    <input type="textbox" id="User-Answer" value={userAnswer} onChange={(event) => setUserAnswer(event.target.value)} required placeholder="Enter Color"/>
+                    <input className="input" type="textbox" id="User-Answer" value={userAnswer} onChange={(event) => setUserAnswer(event.target.value)} required placeholder="Enter Color"/>
                 </div>
             </form>
         </div>
