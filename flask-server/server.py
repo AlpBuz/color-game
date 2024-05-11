@@ -23,9 +23,12 @@ def ConfirmAnswer():
     else:
         response_data["valid"] = False
         return jsonify(response_data)
+    
+
+@app.route("/leaderBoard", methods=["GET"])
+def leaderBoard():
+    return None
         
-
-
     
 
 if __name__ == "__main__":
