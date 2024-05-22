@@ -6,7 +6,7 @@ import { useState } from "react";
 
 
 
-export default function StartGame() {
+export default function StartGame({ onValueChange }) {
     const [score, setScore] = useState (0);
     const [userAnswer, setUserAnswer] = useState('')
 
@@ -18,6 +18,7 @@ export default function StartGame() {
 
     const updateScore = () => {
         setScore(score + 100);
+        onValueChange (score);
     }
 
     const nextColorAndWord = (data) => {
