@@ -4,6 +4,7 @@ from helpers import nextColor, nextWord
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+leaderBoard = {}
 
 
 @app.route("/confirmAnswer", methods=["POST"])
@@ -25,9 +26,24 @@ def ConfirmAnswer():
         return jsonify(response_data)
     
 
-@app.route("/leaderBoard", methods=["GET"])
-def leaderBoard():
-    return None
+@app.route("/update_leaderBoard", methods=["POST"])
+def update_leaderBoard():
+    data = request.form
+    player = data["UserName"]
+    Score = data["userScore"]
+    
+    leaderBoard[player] = Score
+    print(leaderBoard)
+
+    return jsonify({"message": "Leaderboard has been Updated", "addedScore": True})
+
+
+
+@app.route("/get_leaderboard", methods=["GET"])
+def get_leaderBoard():
+    global leaderBoard
+    leaderBoard = dict(sorted(leaderBoard.items(), key=lambda item: item[1], reverse=True)) #sorts the leaderBoard
+    return jsonify(leaderBoard)
         
     
 
