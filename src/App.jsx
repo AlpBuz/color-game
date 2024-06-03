@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import StartGame from "./frontend/ColorGame";
 import GameOver from "./frontend/GameOver";
+import LeaderBoard from "./frontend/leaderBoard";
 
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
   const [TimerIsActive, setTimerIsActive] = useState(false);
   const [points, setPoints] = useState(0);
   const [currentDisplay, setCurrentDisplay] = useState("mainMenu");
+  const [leaderboardData, setLeaderboardData] = useState({})
 
   const handlePointChange = (newPoints) => {
     setPoints(newPoints);
@@ -32,7 +34,25 @@ function App() {
 
     return () => clearInterval(interval);
 
-}, [TimerIsActive, timer])
+  }, [TimerIsActive, timer])
+
+
+  useEffect(() => {
+    if(TimerIsActive === false){
+      const fetchLeaderboardData = async () => {
+        const response = await fetch('http://localhost:5000/get_leaderboard',{
+          method: "GET"
+        });
+        const data = await response.json();
+        setLeaderboardData(data);
+      };
+      fetchLeaderboardData();
+
+    }
+
+  }, [TimerIsActive])
+
+
 
   // Function to start the game
   const startGame = () => {
@@ -49,51 +69,59 @@ function App() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="p-6 max-w-sm bg-gray-200 rounded-xl shadow-md flex items-center space-x-4">
-        <h1 className="text-xl font-bold">Color Game</h1>
+    <div>
+      <div className="flex items-center justify-center h-screen">
+        <LeaderBoard data={leaderboardData} />
+        <div className="p-6 max-w-sm bg-gray-200 rounded-xl shadow-md flex items-center space-x-4">
+          
+          <h1 className="text-xl font-bold">Color Game</h1>
         
 
-        <div className="Main-Menu">
+          <div className="Main-Menu">
 
-          {currentDisplay === "mainMenu" && (
-            <button
-              onClick={startGame}
-              className="btn btn-green flex justify-center w-full"
-            >
-              Start Game
-            </button>
-          )}
+            {currentDisplay === "mainMenu" && (
+              <button
+                onClick={startGame}
+                className="btn btn-green flex justify-center w-full"
+              >
+                Start Game
+              </button>
+            )}
 
-          {currentDisplay === "gameStart" && (
-            <div>
-              <div className="timer">
-                <p>Time: {timer}</p>
+            {currentDisplay === "gameStart" && (
+              <div>
+                <div className="timer">
+                  <p>Time: {timer}</p>
+                </div>
+
+                <StartGame onValueChange={handlePointChange} />
+
+                <div className="endGame mt-4">
+                  <button onClick={endGame} className="btn btn-red">
+                    End Game
+                  </button>
+                </div>
+
+                <div>
+
+                </div>
               </div>
+            )}
 
-              <StartGame onValueChange={handlePointChange} />
-
+            {currentDisplay === "GameOver" && (
+              <div>
+              <GameOver Score={points}/>
               <div className="endGame mt-4">
-                <button onClick={endGame} className="btn btn-red">
-                  End Game
-                </button>
+                  <button onClick={endGame} className="btn btn-red">
+                    End Game
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-
-          {currentDisplay === "GameOver" && (
-            <div>
-            <GameOver Score={points}/>
-            <div className="endGame mt-4">
-                <button onClick={endGame} className="btn btn-red">
-                  End Game
-                </button>
-              </div>
-            </div>
-          )}
+            )}
 
 
 
+          </div>
         </div>
       </div>
     </div>

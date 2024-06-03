@@ -35,12 +35,13 @@ def update_leaderBoard():
     leaderBoard[player] = Score
     print(leaderBoard)
 
-    return jsonify({"message": "Leaderboard has been Updated"})
+    return jsonify({"message": "Leaderboard has been Updated", "addedScore": True})
 
 
 
 @app.route("/get_leaderboard", methods=["GET"])
 def get_leaderBoard():
+    global leaderBoard
     leaderBoard = dict(sorted(leaderBoard.items(), key=lambda item: item[1], reverse=True)) #sorts the leaderBoard
     return jsonify(leaderBoard)
         

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 
 
+//function for displaying the gameover screen
 function GameOver({Score}){
     const [user, setUser] = useState("")
+    const [addedScore, setAddedScore] = useState(false)
 
+    //submits form for updating the leaderboard with the users score and name
     const formSubmit = async (event) => {
         event.preventDefault();
         const payload = new FormData();
@@ -15,6 +18,9 @@ function GameOver({Score}){
                 method: "POST",
                 body: payload
             })
+            const data = await response.json();
+            setAddedScore(data.addedScore);
+            
 
         }catch (error){
             console.error("error in sending User Score: ", error.message)
@@ -35,6 +41,8 @@ function GameOver({Score}){
             <div>
                 <p>Total Points: {Score + 100}</p>
             </div>
+
+            {addedScore && <p className="updatedLeaderboard" style={{"color": "green"}}>LeaderBoard has been updated</p>}
 
             <form name="Submit-User" action="" method="post" onSubmit={formSubmit}>
                 <div>
